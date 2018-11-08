@@ -56,41 +56,37 @@ app.put('/users/:id', async (req, res) => {
 });
 
 app.get('/todos', async (req, res) => {
-  const users = await sequelize.query('SELECT * FROM todos', {
+  const todos = await sequelize.query('SELECT * FROM todos', {
     type: Sequelize.QueryTypes.SELECT
   });
-  res.json(users);
+  res.json(todos);
 });
-app.post('/users', async (req, res) => {
+app.post('/todos', async (req, res) => {
   const query =
-    'INSERT INTO users(first_name, last_name, age, email, password, contact) VALUES (:first_name, :last_name, :age, :email, :password, :contact)';
+    'INSERT INTO todos(title, description, user_id) VALUES (:title, :description, :user_id)';
   const results = await sequelize.query(query, {
     type: Sequelize.QueryTypes.INSERT,
     replacements: req.body
   });
   res.json(results);
 });
-app.delete('/users/:id', async (req, res) => {
-  const query = 'DELETE FROM users WHERE id = :id';
+app.delete('/todos/:user_id', async (req, res) => {
+  const query = 'DELETE FROM todos WHERE id = :user_id';
   const results = await sequelize.query(query, {
     type: Sequelize.QueryTypes.INSERT,
     replacements: req.params
   });
   res.json(results);
 });
-app.put('/users/:id', async (req, res) => {
+app.put('/todos/:id', async (req, res) => {
   const query =
-    'UPDATE users SET first_name = :first_name, last_name = :last_name, age = :age, email = :email, password = :password, contact = :contact WHERE id = :id';
+    'UPDATE todos SET title = :title, description = :description WHERE user_id = :user_id';
   const results = await sequelize.query(query, {
     type: Sequelize.QueryTypes.UPDATE,
     replacements: {
-      id: req.params.id,
-      first_name: req.body.first_name,
-      last_name: req.body.last_name,
-      age: req.body.age,
-      email: req.body.email,
-      password: req.body.password,
-      contact: req.body.contact
+      title: req.body.title,
+      description: req.body.description,
+      user_id: req.params.user_id
     }
   });
   res.json(results);
